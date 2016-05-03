@@ -1,25 +1,13 @@
 # == Class: sc_java
 #
-# Full description of class sc_java here.
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# register oracle java repository and install java
 #
 # === Variables
 #
 # Here you should define a list of variables that this module would require.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*java_version*]
+#   java version, default is '8'
 #
 # === Examples
 #
@@ -29,13 +17,29 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Andreas Ziethen <az@scale.sc>
 #
 # === Copyright
 #
-# Copyright 2016 Your name here, unless otherwise noted.
+# Copyright 2016 ScaleCommerce GmbH
 #
-class sc_java {
+class sc_java(
+  $java_version = '8',
+) {
+    apt::key { 'ppa:webupd8team/java':
+      ensure => present,
+      id     => '7B2C3B0889BF5709A105D03AC2518248EEA14886',
+    }->
+    apt::ppa { 'ppa:webupd8team/java':
+      ensure => present,
+    }->
 
+    exec { 'acceptLicense':
+      command => 'echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
+      unless => "/usr/bin/dbconf-show oracle-java$java_version-installer | grep 'accepted-oracle-license-v1-1: true'",
+    }->
 
+    package { "oracle-java$java_version-installer":
+      ensure => 'installed',
+    }
 }
