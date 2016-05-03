@@ -1,0 +1,14 @@
+{
+  "name": "scalecommerce-sc_java",
+  "version": "0.1.0",
+  "author": "scalecommerce",
+  "summary": "Puppet module to install oracle java",
+  "license": "Apache 2.0",
+  "source": "https://github.com/ScaleCommerce/puppet-sc_java.git",
+  "project_page": "https://github.com/ScaleCommerce/puppet-sc_java",
+  "issues_url": "https://github.com/ScaleCommerce/puppet-sc_java/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
