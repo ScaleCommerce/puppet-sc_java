@@ -26,6 +26,8 @@
 class sc_java(
   $java_version = '8',
 ) {
+  include apt
+
     apt::key { 'ppa:webupd8team/java':
       ensure => present,
       id     => '7B2C3B0889BF5709A105D03AC2518248EEA14886',
