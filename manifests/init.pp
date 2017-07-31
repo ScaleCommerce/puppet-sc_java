@@ -39,9 +39,11 @@ class sc_java(
     exec { 'acceptLicense':
       command => '/bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
       unless => "/usr/bin/debconf-show oracle-java$java_version-installer | grep 'accepted-oracle-license-v1-1: true'",
+      require => Class['apt::update'],
     }->
 
     package { "oracle-java$java_version-installer":
       ensure => 'installed',
+      require => Class['apt::update'],
     }
 }
