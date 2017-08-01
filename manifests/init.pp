@@ -35,6 +35,7 @@ class sc_java(
     
     apt::ppa { 'ppa:webupd8team/java':
       ensure => present,
+      notify => Exec['java_apt_get_update'],
     }->
 
     exec { 'acceptLicense':
@@ -43,9 +44,11 @@ class sc_java(
       before => Exec['java_apt_get_update'],
     }
     
+    # apt class is not used due to problems with dependency cylce in rundeck module
     exec { 'java_apt_get_update':
       command => '/usr/bin/apt-get update',
       before => Package["oracle-java$java_version-installer"],
+      refreshonly => true,
     }
 
     package { "oracle-java$java_version-installer":
