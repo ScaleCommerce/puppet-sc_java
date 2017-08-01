@@ -31,13 +31,11 @@ class sc_java(
     apt::key { 'ppa:webupd8team/java':
       ensure => present,
       id     => '7B2C3B0889BF5709A105D03AC2518248EEA14886',
-      before => Apt::ppa['ppa:webupd8team/java'],
-    }
+    }->
     
     apt::ppa { 'ppa:webupd8team/java':
       ensure => present,
-      before => Exec['acceptLicense'],
-    }
+    }->
 
     exec { 'acceptLicense':
       command => '/bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
