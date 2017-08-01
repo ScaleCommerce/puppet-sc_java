@@ -48,9 +48,7 @@ class sc_java(
       before => Package["oracle-java$java_version-installer"],
     }
 
-    ensure_resource('package', "oracle-java$java_version-installer", {'ensure' => 'installed', require => Class[Apt::Update] } )
-
-#    package { "oracle-java$java_version-installer":
-#      ensure => 'installed',
-#    }
+    package { "oracle-java$java_version-installer":
+      ensure => 'installed',
+    }
 }
