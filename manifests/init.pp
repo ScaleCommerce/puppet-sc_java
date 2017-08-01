@@ -41,7 +41,9 @@ class sc_java(
       unless => "/usr/bin/debconf-show oracle-java$java_version-installer | grep 'accepted-oracle-license-v1-1: true'",
     }->
 
-    package { "oracle-java$java_version-installer":
-      ensure => 'installed',
-    }
+    ensure_resource('package', "oracle-java$java_version-installer", {'ensure' => 'installed', require => Class[Apt::Update] } )
+
+#    package { "oracle-java$java_version-installer":
+#      ensure => 'installed',
+#    }
 }
