@@ -43,6 +43,5 @@ class sc_java(
 
     package { "oracle-java$java_version-installer":
       ensure => 'installed',
-      require => Class['apt::update'],
     }
 }
