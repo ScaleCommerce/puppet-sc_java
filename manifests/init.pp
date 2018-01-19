@@ -6,52 +6,60 @@
 #
 # Here you should define a list of variables that this module would require.
 #
+# [*java_distribution*]
+#   either openjdk or oracle, default is 'oracle'
 # [*java_version*]
 #   java version, default is '8'
 #
-# === Examples
-#
-#  class { 'sc_java':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
 #
 # === Authors
 #
 # Andreas Ziethen <az@scale.sc>
+# Thomas Lohner <tl@scale.sc>
 #
 # === Copyright
 #
-# Copyright 2016 ScaleCommerce GmbH
+# Copyright 2018 ScaleCommerce GmbH
 #
 class sc_java(
+  $java_distribution = 'oracle',
   $java_version = '8',
 ) {
-  include apt
 
-    apt::key { 'ppa:webupd8team/java':
-      ensure => present,
-      id     => '7B2C3B0889BF5709A105D03AC2518248EEA14886',
-    }->
-    
-    apt::ppa { 'ppa:webupd8team/java':
-      ensure => present,
-      notify => Exec['java_apt_get_update'],
-    }->
+  case $java_distribution {
+    'openjdk': {
+      package { "openjdk-$java_version-jdk":
+        ensure => 'installed',
+      }
+    }
+    'oracle', default: {
+      include apt
+      apt::key { 'ppa:webupd8team/java':
+        ensure => present,
+        id     => '7B2C3B0889BF5709A105D03AC2518248EEA14886',
+      }->
 
-    exec { 'acceptLicense':
-      command => '/bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
-      unless => "/usr/bin/debconf-show oracle-java$java_version-installer | grep 'accepted-oracle-license-v1-1: true'",
-      before => Exec['java_apt_get_update'],
-    }
-    
-    # apt class is not used due to problems with dependency cylce in rundeck module
-    exec { 'java_apt_get_update':
-      command => '/usr/bin/apt-get update',
-      before => Package["oracle-java$java_version-installer"],
-      refreshonly => true,
-    }
+      apt::ppa { 'ppa:webupd8team/java':
+        ensure => present,
+        notify => Exec['java_apt_get_update'],
+      }->
 
-    package { "oracle-java$java_version-installer":
-      ensure => 'installed',
+      exec { 'acceptLicense':
+        command => '/bin/echo debconf shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
+        unless => "/usr/bin/debconf-show oracle-java$java_version-installer | grep 'accepted-oracle-license-v1-1: true'",
+        before => Exec['java_apt_get_update'],
+      }
+
+      # apt class is not used due to problems with dependency cylce in rundeck module
+      exec { 'java_apt_get_update':
+        command => '/usr/bin/apt-get update',
+        before => Package["oracle-java$java_version-installer"],
+        refreshonly => true,
+      }
+
+      package { "oracle-java$java_version-installer":
+        ensure => 'installed',
+      }
     }
+  }
 }
