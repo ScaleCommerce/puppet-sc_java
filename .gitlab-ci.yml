@@ -2,7 +2,9 @@ image: scalecommerce/xenial:1.12
 
 stages:
   - OpenJDK 8
+  # - OpenJDK 11
   - Oracle Java 8
+  - Oracle Java 11
   - push2github
 
 trusty:oracle8:
@@ -14,6 +16,18 @@ trusty:oracle8:
     - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: oracle/' ./test/hieradata/module.yaml"
     - "sed -i 's/java_version:.*/java_version: 8/' ./test/hieradata/module.yaml"
     - sed -i "s/should match '.*'/should match '\/*java version \"1.8\/*'/" ./test/inspec/sc_java.rb
+    - puppet apply -v ./test/site.pp
+    - inspec exec ./test/inspec/sc_java.rb
+
+trusty:oracle11:
+  image: scalecommerce/base:0.6
+  stage: Oracle Java 11
+  script:
+    - ./test/install-puppet6.sh
+    - ./test/install.sh
+    - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: oracle/' ./test/hieradata/module.yaml"
+    - "sed -i 's/java_version:.*/java_version: 11/' ./test/hieradata/module.yaml"
+    - sed -i "s/should match '.*'/should match '\/*java version \"11\/*'/" ./test/inspec/sc_java.rb
     - puppet apply -v ./test/site.pp
     - inspec exec ./test/inspec/sc_java.rb
 
@@ -41,6 +55,18 @@ xenial:oracle8:
     - puppet apply -v ./test/site.pp
     - inspec exec ./test/inspec/sc_java.rb
 
+xenial:oracle11:
+  image: scalecommerce/xenial:1.12
+  stage: Oracle Java 11
+  script:
+    - ./test/install-puppet6.sh
+    - ./test/install.sh
+    - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: oracle/' ./test/hieradata/module.yaml"
+    - "sed -i 's/java_version:.*/java_version: 11/' ./test/hieradata/module.yaml"
+    - sed -i "s/should match '.*'/should match '\/*java version \"11\/*'/" ./test/inspec/sc_java.rb
+    - puppet apply -v ./test/site.pp
+    - inspec exec ./test/inspec/sc_java.rb
+
 bionic:openjdk8:
   image: scalecommerce/bionic:1.0
   stage: OpenJDK 8
@@ -53,6 +79,20 @@ bionic:openjdk8:
     - puppet apply -v ./test/site.pp
     - inspec exec ./test/inspec/sc_java.rb
 
+# enable after openjdk package in bionic is actually 11 and not 10: https://lists.ubuntu.com/archives/ubuntu-release/2018-February/004275.html
+# bionic:openjdk11:
+#   image: scalecommerce/bionic:1.0
+#   stage: OpenJDK 11
+#   script:
+#     - ./test/install-puppet6.sh
+#     - ./test/install.sh
+#     - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: openjdk/' ./test/hieradata/module.yaml"
+#     - "sed -i 's/java_version:.*/java_version: 11/' ./test/hieradata/module.yaml"
+#     - sed -i "s/should match '.*'/should match '\/*openjdk version \"1.11\/*'/" ./test/inspec/sc_java.rb
+#     - puppet apply -v ./test/site.pp
+#     - java -version
+#     - inspec exec ./test/inspec/sc_java.rb
+
 bionic:oracle8:
   image: scalecommerce/bionic:1.0
   stage: Oracle Java 8
@@ -62,6 +102,18 @@ bionic:oracle8:
     - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: oracle/' ./test/hieradata/module.yaml"
     - "sed -i 's/java_version:.*/java_version: 8/' ./test/hieradata/module.yaml"
     - sed -i "s/should match '.*'/should match '\/*java version \"1.8\/*'/" ./test/inspec/sc_java.rb
+    - puppet apply -v ./test/site.pp
+    - inspec exec ./test/inspec/sc_java.rb
+
+bionic:oracle11:
+  image: scalecommerce/bionic:1.0
+  stage: Oracle Java 11
+  script:
+    - ./test/install-puppet6.sh
+    - ./test/install.sh
+    - "sed -i 's/sc_java::java_distribution:.*/sc_java::java_distribution: oracle/' ./test/hieradata/module.yaml"
+    - "sed -i 's/java_version:.*/java_version: 11/' ./test/hieradata/module.yaml"
+    - sed -i "s/should match '.*'/should match '\/*java version \"11\/*'/" ./test/inspec/sc_java.rb
     - puppet apply -v ./test/site.pp
     - inspec exec ./test/inspec/sc_java.rb
 
