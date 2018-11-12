@@ -1,0 +1,3 @@
+---
+sc_java::java_distribution: oracle
+sc_java::java_version: 8

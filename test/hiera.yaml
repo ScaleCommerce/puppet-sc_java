@@ -1,0 +1,13 @@
+---
+version: 5
+defaults:
+  datadir: hieradata
+  data_hash: yaml_data
+
+hierarchy:
+  - name: overrride
+    path: override.yaml
+  - name: common
+    path: common.yaml
+  - name: module
+    path: module.yaml
