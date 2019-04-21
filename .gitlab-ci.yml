@@ -10,6 +10,7 @@ stages:
 trusty:oracle8:
   image: scalecommerce/base:0.6
   stage: Oracle Java 8
+  allow_failure: true
   script:
     - ./test/install-puppet6.sh
     - ./test/install.sh
@@ -46,6 +47,7 @@ xenial:openjdk8:
 xenial:oracle8:
   image: scalecommerce/xenial:1.12
   stage: Oracle Java 8
+  allow_failure: true
   script:
     - ./test/install-puppet6.sh
     - ./test/install.sh
@@ -96,6 +98,7 @@ bionic:openjdk8:
 bionic:oracle8:
   image: scalecommerce/bionic:1.0
   stage: Oracle Java 8
+  allow_failure: true
   script:
     - ./test/install-puppet6.sh
     - ./test/install.sh
