@@ -24,4 +24,4 @@ if ! dpkg-query -W apt-transport-https ; then
 fi
 
 # install inspec
-curl -s https://omnitruck.chef.io/install.sh | bash -s -- -P inspec
+curl -s https://omnitruck.chef.io/install.sh | bash -s -- -P inspec -v 3.9.3
