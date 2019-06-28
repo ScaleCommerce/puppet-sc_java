@@ -2,7 +2,7 @@ image: scalecommerce/xenial:1.12
 
 stages:
   - OpenJDK 8
-  # - OpenJDK 11
+  - OpenJDK 11
   - Oracle Java 8
   - Oracle Java 11
   - push2github
